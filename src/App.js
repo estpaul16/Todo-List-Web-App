@@ -63,7 +63,7 @@ class App extends React.Component {
             completed : false
         };
         dbTodos.add(newTodo).then((doc) => {
-            newTodo['id'] = doc.d;
+            newTodo['id'] = doc.id;
             this.setState({ todos: [ ...this.state.todos, newTodo ] });
         });
     };
