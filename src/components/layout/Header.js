@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Header() {
+const Header = () => {
 	return (
 		<header style={headerStyle}>
 			<h1>TodoList</h1>
@@ -21,3 +21,5 @@ const headerStyle = {
 	textAlign  : 'center',
 	padding    : '10px'
 };
+
+export default Header;

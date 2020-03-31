@@ -1,4 +1,3 @@
-//import Rebase from '../../node_modules/re-base';
 import firebase from '../../node_modules/firebase';
 
 // Your web app's Firebase configuration

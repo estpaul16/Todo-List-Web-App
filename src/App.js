@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 //import Axios from 'axios';
 import dbTodos from './firebase/base';
@@ -10,36 +10,47 @@ import About from './components/pages/About';
 
 import './App.css';
 
-class App extends React.Component {
-    state = {
-        todos : []
-    };
+const App = () => {
+
+    // Todos are the only state in App
+    const [ todos, setTodos ] = useState([]);
 
     // Fetches Todos from Firestore database on load
-    componentDidMount() {
+    useEffect(() => {
         dbTodos.get().then((snapshot) => {
+            const initialState = [];
             snapshot.forEach((doc) => {
                 const currentTodo = doc.data();
                 currentTodo['id'] = doc.id;
-                this.setState({ todos: [ ...this.state.todos, currentTodo ] });
+                initialState.push(currentTodo);
             });
+            setTodos(initialState);
         });
-    }
+        
+        // eslint-disable-next-line
+    }, []);
 
-    componentWillUnmount() {
-        //		base.removeBinding(this.todosRef);
-    }
+    // Fetches Todos from Firestore database on load
+    // componentDidMount() {
+    //     dbTodos.get().then((snapshot) => {
+    //         snapshot.forEach((doc) => {
+    //             const currentTodo = doc.data();
+    //             currentTodo['id'] = doc.id;
+    //             setState({ ...state, todos: [ ...state.todos, currentTodo ] });
+    //         });
+    //     });
+    // };
 
     // Toggle Complete
-    toggleComplete = (id) => {
-        this.setState({
-            todos : this.state.todos.map((todo) => {
+    const toggleComplete = (id) => {
+        setTodos(
+            todos.map((todo) => {
                 if (todo.id === id) {
                     todo.completed = !todo.completed;
                 }
                 return todo;
             })
-        });
+        );
         const toggledTodo = dbTodos.doc(id);
         toggledTodo.get().then((snapshot) => {
             const isCompleted = snapshot.data().completed;
@@ -50,51 +61,45 @@ class App extends React.Component {
     };
 
     // Delete Todo
-    delTodo = (id) => {
+    const delTodo = (id) => {
         dbTodos.doc(id).delete().then((doc) => {
-            this.setState({ todos: this.state.todos.filter((todo) => todo.id !== id) });
+            setTodos(todos.filter((todo) => todo.id !== id));
         });
     };
 
     // Add Todo
-    addTodo = (title) => {
+    const addTodo = (title) => {
         const newTodo = {
             title     : title,
             completed : false
         };
         dbTodos.add(newTodo).then((doc) => {
             newTodo['id'] = doc.id;
-            this.setState({ todos: [ ...this.state.todos, newTodo ] });
+            setTodos([ ...todos, newTodo ]);
         });
     };
 
-    render() {
-        return (
-            <Router>
-                <div className='App'>
-                    <div className='container'>
-                        <Header />
-                        <Route
-                            // exact path makes it so content in Route is only shown at exactly the url, and none of its extensions
-                            exact
-                            path='/'
-                            render={(props) => (
-                                <React.Fragment>
-                                    <AddTodo addTodo={this.addTodo} />
-                                    <Todos
-                                        todos={this.state.todos} 
-                                        toggleComplete={this.toggleComplete}
-                                        delTodo={this.delTodo}
-                                    />
-                                </React.Fragment>
-                            )}
-                        />
-                        <Route path='/about' component={About} />
-                    </div>
+    return (
+        <Router>
+            <div className='App'>
+                <div className='container'>
+                    <Header />
+                    <Route
+                        // exact path makes it so content in Route is only shown at exactly the url, and none of its extensions
+                        exact
+                        path='/'
+                        render={(props) => (
+                            <React.Fragment>
+                                <AddTodo addTodo={addTodo} />
+                                <Todos todos={todos} toggleComplete={toggleComplete} delTodo={delTodo} />
+                            </React.Fragment>
+                        )}
+                    />
+                    <Route path='/about' component={About} />
                 </div>
-            </Router>
-        );
-    }
-}
+            </div>
+        </Router>
+    );
+};
 
 export default App;
