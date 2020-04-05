@@ -2,7 +2,8 @@ import firebase from '../../node_modules/firebase';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey            : 'AIzaSyAWmhqIZjb2G7mQqSEJ505DKUJV1EXvJgQ',
+    // must create your own firebase config and api key
+    apiKey            : '*******************',
     authDomain        : 'react-todo-list-ef6b2.firebaseapp.com',
     databaseURL       : 'https://react-todo-list-ef6b2.firebaseio.com',
     projectId         : 'react-todo-list-ef6b2',
