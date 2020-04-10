@@ -14,6 +14,6 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const dbTodos = db.collection('Todo List');
 
-export default dbTodos;
+export default db;
+export const dbTodos = db.collection('Todo List');

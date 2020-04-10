@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 //import Axios from 'axios';
-import dbTodos from './firebase/base';
+import firestore, { dbTodos } from './firebase/base';
 import Header from './components/layout/Header';
 import Todos from './components/Todos';
 import AddTodo from './components/AddTodo';
@@ -19,7 +19,9 @@ const App = () => {
     useEffect(() => {
         dbTodos.get().then((snapshot) => {
             const initialState = [];
+            console.log(snapshot);
             snapshot.forEach((doc) => {
+                console.log(doc);
                 const currentTodo = doc.data();
                 currentTodo['id'] = doc.id;
                 initialState.push(currentTodo);
